@@ -139,8 +139,9 @@ class EigenMatrixPrinter:
             return ('[%d,%d]' % (row, col), item)
 
     def to_string(self):
-        mat = np.zeros((self.rows, self.cols), dtype=np.float64)
+        mat = "["
         for row in range(self.rows):
+            mat += "["
             for col in range(self.cols):
                 if self.rowMajor:
                     offset = row * self.cols + col
@@ -163,7 +164,9 @@ class EigenMatrixPrinter:
                     item = gdb.parse_and_eval(eval_string)
                 except (gdb.error):
                     pass
-                mat[row, col] = float(item)
+                mat += " {: 8.6e}".format(float(item))
+            mat +="]\n "
+        mat= mat[:-2] + "]"
 
         return "Eigen::%s<%s,%d,%d,%s> (data ptr: %s)\n%s\n" % (
             self.variety, self.innerType, self.rows, self.cols,
